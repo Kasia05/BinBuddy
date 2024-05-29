@@ -6,9 +6,18 @@ from google.cloud import storage
 from tqdm import tqdm
 from binbuddy.params import *
 
-def download_and_extract_zip_from_gcs(bucket_name = BUCKET_NAME,
+
+def check_existing_data(directory):
+    # Check if the directory exists and contains files
+    return os.path.exists(directory) and any(os.scandir(directory))
+
+def load_images(bucket_name = BUCKET_NAME,
                                       zip_blob_name=BLOB_NAME,
-                                      extract_to='../raw_data'):
+                                      extract_to='raw_data'):
+
+    if check_existing_data(extract_to):
+        print(f"Data already exists in {extract_to}. Skipping download.")
+        return load_images_from_directory(extract_to)
 
     os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = GOOGLE_APPLICATION_CREDENTIALS
 
@@ -58,9 +67,14 @@ def download_and_extract_zip_from_gcs(bucket_name = BUCKET_NAME,
     with zipfile.ZipFile(zip_data, 'r') as zip_ref:
         zip_ref.extractall(extract_to)
 
+    images = load_images_from_directory(extract_to)
+    print(f'Extracted and loaded {len(images)} images')
+    return images
+
+def load_images_from_directory(directory):
     # Load images from the extracted files
     images = []
-    for root, dirs, files in os.walk(extract_to):
+    for root, dirs, files in os.walk(directory):
         for file in files:
             if file.endswith(('png', 'jpg', 'jpeg')):
                 file_path = os.path.join(root, file)
@@ -69,5 +83,4 @@ def download_and_extract_zip_from_gcs(bucket_name = BUCKET_NAME,
                         images.append(img.copy())
                 except Exception as e:
                     print(f"Error loading image {file_path}: {e}")
-    print(f'Extracted and loaded {len(images)} images')
     return images
