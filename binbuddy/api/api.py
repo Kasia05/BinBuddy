@@ -4,11 +4,13 @@ from PIL import Image
 import io
 import tensorflow as tf
 import numpy as np
+from binbuddy.ml_logic.registry import load_model
+from tensorflow import keras
 
 app = FastAPI()
 
-#TODO
-#model = load_model('path_to_your_model.h5')
+# Load the model
+app.state.model = load_model()
 
 @app.get("/")
 def root():
@@ -33,19 +35,19 @@ async def predict(file: UploadFile = File(...)):
 
 
 # Placeholder function for the model prediction
-def predict_image(image: Image.Image) -> str:
-    # For now, it returns a dummy prediction
-    return "dummy_prediction"
+# def predict_image(image: Image.Image) -> str:
+#     # For now, it returns a dummy prediction
+#     return "dummy_prediction"
 
 
 # Below could be the code to preprocess
-#def predict_image(image: Image.Image) -> str:
-    # Preprocess the image to match the model input requirements
-    #image = image.resize((224, 224))  # Resize the image to the input size expected by the model
-    #image_array = tf.keras.preprocessing.image.img_to_array(image)
-    #image_array = np.expand_dims(image_array, axis=0)  # Create batch axis
-    #image_array = tf.keras.applications.mobilenet_v2.preprocess_input(image_array)  # Preprocess the input as needed by the model
+def predict_image(image: Image.Image) -> str:
+    #Preprocess the image to match the model input requirements
+    image = image.resize((150, 150))  # Resize the image to the input size expected by the model
+    image_array = keras.preprocessing.image.img_to_array(image)
+    image_array = np.expand_dims(image_array, axis=0)  # Create batch axis
+    image_array = keras.applications.mobilenet_v2.preprocess_input(image_array)  # Preprocess the input as needed by the model
 
 
-    #prediction = model.predict(image_array)
-    #return prediction
+    prediction = app.state.model.predict(image_array)
+    return prediction
