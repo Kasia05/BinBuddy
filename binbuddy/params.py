@@ -15,3 +15,5 @@ BUCKET_NAME = os.environ.get("BUCKET_NAME")
 BLOB_NAME = os.environ.get("BLOB_NAME")
 
 GOOGLE_APPLICATION_CREDENTIALS = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
+
+LOCAL_REGISTRY_PATH =  os.path.join(os.getcwd(), "binbuddy", "assets")

@@ -8,7 +8,7 @@ from binbuddy.params import *
 
 def download_and_extract_zip_from_gcs(bucket_name = BUCKET_NAME,
                                       zip_blob_name=BLOB_NAME,
-                                      extract_to='../raw_data'):
+                                      extract_to='./raw_data'):
 
     os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = GOOGLE_APPLICATION_CREDENTIALS
 

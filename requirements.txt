@@ -16,6 +16,7 @@ cachetools==5.3.3
 certifi==2024.2.2
 cffi==1.16.0
 charset-normalizer==3.3.2
+colorama==0.4.6
 comm==0.2.2
 contourpy==1.2.1
 cycler==0.12.1
