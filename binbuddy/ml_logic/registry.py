@@ -35,7 +35,7 @@ def load_model() -> keras.Model:
 
         latest_model = keras.models.load_model(most_recent_model_path_on_disk)
 
-        print("✅ Model loaded from local disk")
+        print(f"✅ Model loaded from local disk {most_recent_model_path_on_disk}")
 
         return latest_model
 
@@ -52,11 +52,8 @@ def load_model() -> keras.Model:
             latest_blob = max(blobs, key=lambda x: x.updated)
             latest_model_path_to_save = os.path.join(LOCAL_REGISTRY_PATH, "models", latest_blob.name)
             latest_blob.download_to_filename(latest_model_path_to_save)
-
             latest_model = keras.models.load_model(latest_model_path_to_save)
-
-            print("✅ Latest model downloaded from cloud storage")
-
+            print(f"✅ Latest model downloaded from cloud storage {latest_blob.name} and loaded successfully!")
             return latest_model
         except:
             print(f"\n❌ No model found in GCS bucket {BUCKET_NAME}")
