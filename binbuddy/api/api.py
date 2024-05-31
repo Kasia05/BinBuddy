@@ -6,6 +6,7 @@ import tensorflow as tf
 import numpy as np
 from binbuddy.ml_logic.registry import load_model
 from tensorflow import keras
+import json
 
 app = FastAPI()
 
@@ -50,4 +51,11 @@ def predict_image(image: Image.Image) -> str:
 
 
     prediction = app.state.model.predict(image_array)
-    return prediction
+
+      # Convert the prediction to a list
+    prediction_list = prediction.tolist()
+
+    # Serialize to JSON
+    prediction_json = json.dumps(prediction_list)
+
+    return prediction_json
